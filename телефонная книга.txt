@@ -1,24 +1,43 @@
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.PrintWriter;
 import java.util.TreeMap;
 
 public class PhoneBook {
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         TreeMap<String,String> phoneName = new TreeMap<>();
+        int count = 0;
 
         for (; ; ) {
 
-            System.out.println("Введите номер телефона, имя или команду: ");
+            System.out.println("Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°, РёРјСЏ РёР»Рё РєРѕРјР°РЅРґСѓ: ");
             String command = reader.readLine().trim();
             String name;
 
             if(command.equals("exit")) {
-                System.out.println("До новых встреч!");
+                System.out.println("Р”Рѕ РЅРѕРІС‹С… РІСЃС‚СЂРµС‡!");
                 break;
+            }if(command.equals("EXPORT")) {
+                System.out.println("Р’РІРµРґРёС‚Рµ РїСѓС‚СЊ РїР°РїРєРё, РІ РєРѕС‚РѕСЂСѓСЋ СЃРѕС…СЂР°РЅРёС‚СЊ РїСЂРѕРµРєС‚: ");
+                String path = reader.readLine().trim() + "/data.json";
+
+                JSONObject object = new JSONObject();
+                PrintWriter pw = new PrintWriter(path);
+
+                for (String key : phoneName.keySet()){
+                    object.put(key,phoneName.get(key));
+                }
+                pw.write(String.valueOf(object));
+                System.out.println("\r\nР”Р°РЅРЅС‹Рµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅС‹. РђРґСЂРµСЃ С„Р°Р№Р»Р°: " + path + "\r\n");
+                pw.flush();
+                pw.close();
+
             }else if (command.equals("LIST")) {
                 for (String element: phoneName.keySet()){
                     System.out.println(element + " " + phoneName.get(element));
@@ -33,16 +52,16 @@ public class PhoneBook {
                 }
                 if (!nameIsCommand){
 
-                    System.out.println("Таких данных нет. Для сохранения новых данных" +
-                            " введите сначала номер телефона и нажмите enter: ");
+                    System.out.println("РўР°РєРёС… РґР°РЅРЅС‹С… РЅРµС‚. Р”Р»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РЅРѕРІС‹С… РґР°РЅРЅС‹С…" +
+                            " РІРІРµРґРёС‚Рµ СЃРЅР°С‡Р°Р»Р° РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР° Рё РЅР°Р¶РјРёС‚Рµ enter: ");
                     String phone = reader.readLine().trim();
                     if (phone.equals("")) {
                         phone = command;
                     }
 
-                    System.out.println("Теперь введите имя: ");
+                    System.out.println("РўРµРїРµСЂСЊ РІРІРµРґРёС‚Рµ РёРјСЏ: ");
                     name = reader.readLine().trim();
-
+                    count++;
                     phoneName.put(phone, name);
                 }
              }else {
