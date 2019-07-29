@@ -25,18 +25,29 @@ public class PhoneBook {
                 break;
             }if(command.equals("EXPORT")) {
                 System.out.println("Введите путь папки, в которую сохранить проект: ");
-                String path = reader.readLine().trim() + "/data.json";
+                String path = "";
+                PrintWriter pw = null;
 
-                JSONObject object = new JSONObject();
-                PrintWriter pw = new PrintWriter(path);
-
-                for (String key : phoneName.keySet()){
-                    object.put(key,phoneName.get(key));
+                try {
+                    path = reader.readLine().trim() + "/data.json";
+                    pw = new PrintWriter(path);
+                    System.out.println("Файл будет сохранен по адресу " + path + "\r\n");
+                }catch (Exception e){
+                    path = "/data.json";
+                    pw = new PrintWriter(path);
+                    System.out.println("Введеный путь не найден, файл будет сохранен по адресу " + path + "\r\n");
                 }
-                pw.write(String.valueOf(object));
-                System.out.println("\r\nДанные успешно сохранены. Адрес файла: " + path + "\r\n");
-                pw.flush();
-                pw.close();
+                finally {
+                    JSONObject object = new JSONObject();
+
+                    for (String key : phoneName.keySet()){
+                        object.put(key,phoneName.get(key));
+                    }
+                    pw.write(String.valueOf(object));
+                    pw.flush();
+                    pw.close();
+                }
+
 
             }else if (command.equals("LIST")) {
                 for (String element: phoneName.keySet()){
